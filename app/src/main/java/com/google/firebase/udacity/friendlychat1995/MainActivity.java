@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -161,11 +160,11 @@ public class MainActivity extends AppCompatActivity {
                 if(user != null){
                     //logged in state
                     onSignedIn(user.getDisplayName());
-                    Toast.makeText(MainActivity.this, "You're now logged in", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivity.this, "You're now logged in", Toast.LENGTH_SHORT).show();
                 }else{
                     //logged out state
                     onSignedOutCleanup();
-                    Toast.makeText(MainActivity.this, "You're now logged out", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivity.this, "You're now logged out", Toast.LENGTH_SHORT).show();
                     startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), RC_SIGN_IN);
                 }
             }
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
         mMessageAdapter.clear();
-        detachDatabaseListener();
+       detachDatabaseListener();
 
     }
 
@@ -227,45 +226,53 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.sign_out_menu:
+                AuthUI.getInstance().signOut(MainActivity.this);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     private void detachDatabaseListener(){
-        if(mMessagesDatabaseReference != null){
+        if(mMessagesDatabaseReference != null && mMessagesDatabaseReference != null){
             mMessagesDatabaseReference.removeEventListener(childEventListener);
-            childEventListener = null;
+            //childEventListener = null;
         }
     }
 
     private void attachDatabaseListener(){
-        childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                mMessageAdapter.add(friendlyMessage);
-            }
+        if(childEventListener != null) {
+            childEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
+                    mMessageAdapter.add(friendlyMessage);
+                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        };
+                }
+            };
 
-        mMessagesDatabaseReference.addChildEventListener(childEventListener);
+
+            mMessagesDatabaseReference.addChildEventListener(childEventListener);
+        }
     }
 }
