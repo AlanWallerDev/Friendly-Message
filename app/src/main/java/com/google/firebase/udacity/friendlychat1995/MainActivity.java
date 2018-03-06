@@ -235,9 +235,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void detachDatabaseListener(){
-        if(mMessagesDatabaseReference != null && mMessagesDatabaseReference != null){
+        if(mMessagesDatabaseReference != null && childEventListener != null){
             mMessagesDatabaseReference.removeEventListener(childEventListener);
-            //childEventListener = null;
+            childEventListener = null;
         }
     }
 
