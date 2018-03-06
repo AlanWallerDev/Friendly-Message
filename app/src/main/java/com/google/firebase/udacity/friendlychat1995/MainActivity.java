@@ -160,11 +160,11 @@ public class MainActivity extends AppCompatActivity {
                 if(user != null){
                     //logged in state
                     onSignedIn(user.getDisplayName());
-                   // Toast.makeText(MainActivity.this, "You're now logged in", Toast.LENGTH_SHORT).show();
+
                 }else{
                     //logged out state
                     onSignedOutCleanup();
-                   // Toast.makeText(MainActivity.this, "You're now logged out", Toast.LENGTH_SHORT).show();
+
                     startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), RC_SIGN_IN);
                 }
             }
